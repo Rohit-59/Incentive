@@ -3,9 +3,11 @@ const XLSX = require("xlsx");
 
 let MGAranges = [];
 let carPairs = [];
+let ExchangePairs = [];
 let EWInputs = [];
 let CCPInputs = [];
 let MSSFInputs = [];
+let DiscountInputs = [];
 
 
 
@@ -197,6 +199,21 @@ const addMSSFInputFields = (type, MSSFinputsContainer) => {
 };
 
 
+const addDiscountInputFields = (DinputsContainer) => {
+    const inputFields = `
+        <div class="DinputGroup">
+            <label for="amountMin">Amount Minimum (Rs):</label>
+            <input type="number" step="0.01" name="amountMin" required>
+            <label for="amountMax">Amount Maximum (Rs):</label>
+            <input type="number" step="0.01" name="amountMax">
+            <label for="incentive">Incentive (Rs):</label>
+            <input type="number" name="incentive" required>
+        </div>
+    `;
+    DinputsContainer.insertAdjacentHTML('beforeend', inputFields);
+};
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const fileSelectorSalesExcel = document.querySelector("#file-input-salesExcel");
@@ -245,6 +262,8 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
       `
     };
+
+    
     const addInputButton = document.getElementById('addInputButton');
 
     addInputButton.addEventListener('click', () => {
@@ -301,6 +320,27 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 
 
+
+    // Exchange Pair
+
+    const addExchangePairButton = document.getElementById('addExchangePairButton');
+    addExchangePairButton.addEventListener('click', () => {
+
+        const pairContainer = document.getElementById('Exchange-pairs-container');
+        const div = document.createElement('div');
+        div.className = 'Exchange-pair-container';
+
+        div.innerHTML = `
+        <label for="exchange">Exchange No:</label>
+        <input type="number" name="exchange">
+        <label for="incentive">Incentive:</label>
+        <input type="number" name="incentive" step="0.01">
+    `;
+        pairContainer.insertBefore(div, pairContainer.lastElementChild);
+
+    })
+
+
     // For MGA incentive
     const addMGAInput = document.getElementById('addMGAInput');
     addMGAInput.addEventListener('click', () => {
@@ -325,6 +365,19 @@ document.addEventListener("DOMContentLoaded", function () {
   addCCPInputFields(selectedType, CCPContainer);
 
    })
+
+
+   // For Discount Input
+
+
+   const addDiscountInputButton = document.getElementById('addDiscountInputButton');
+  
+
+   addDiscountInputButton.addEventListener('click',()=>{
+    const DiscountContainer = document.getElementById('DiscountInputsContainer');
+    addDiscountInputFields(DiscountContainer);
+   })
+   
 
 
 
@@ -381,6 +434,23 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         carPairs.push(pair);
+    }
+
+
+
+    const ExchangepairContainers = document.getElementsByClassName('Exchange-pair-container');
+    for (let i = 0; i < ExchangepairContainers.length; i++) {
+        const ExchangepairContainer = ExchangepairContainers[i];
+        const exchangeInput = ExchangepairContainer.querySelector('input[name="exchange"]');
+        const incentiveInput = ExchangepairContainer.querySelector('input[name="incentive"]');
+
+
+        const exchangePair = {
+            ExchangeNumber: exchangeInput.value,
+            incentive: incentiveInput.value
+        };
+
+        ExchangePairs.push(exchangePair);
     }
 
 
@@ -466,9 +536,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+
+  
+
+       const DinputGroups = document.querySelectorAll('.DinputGroup');
+                DinputGroups.forEach(inputDiv => {
+                    const amountMinInput = inputDiv.querySelector('[name="amountMin"]');
+                    const amountMaxInput = inputDiv.querySelector('[name="amountMax"]');
+                    const incentiveInput = inputDiv.querySelector('[name="incentive"]');
+
+                    const incentive = {
+                        min: parseFloat(amountMinInput.value),
+                        max: amountMaxInput.value ? parseFloat(amountMaxInput.value) : null,
+                        incentive: parseFloat(incentiveInput.value)
+                    };
+                    DiscountInputs.push(incentive);
+                });
+
+
+
+
     finalObj["QC"] = qcData;
     finalObj["CDI"] = cdiIncentives;
     finalObj["carIncentive"] = carPairs;
+    finalObj["ExchangeInputs"] = ExchangePairs;
+    finalObj["DiscountInputs"] = DiscountInputs;
     finalObj["MGAIncentive"] = MGAranges;
     finalObj["Extended Warranty"] = EWInputs;
     finalObj["CCP"] = CCPInputs;

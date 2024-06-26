@@ -66,6 +66,7 @@ const checkQualifingCondition = (formData) => {
   salesExcelDataSheet.forEach((item) => {
 
     let numberCheck = 0;
+    let Discount = 0;
     let EWCheck = 0;
     let EWPCheck = 0;
     let TotalNumberCheck = 0;
@@ -98,6 +99,8 @@ const checkQualifingCondition = (formData) => {
     }
 
     DSE_NoOfSoldCarExcelDataArr.forEach((sold) => {
+
+     Discount = Discount + parseInt(sold["FINAL DISCOUNT"]); 
 
      if(parseInt(sold["CCP PLUS"]) >0){
       CCPcheck++;
@@ -151,6 +154,7 @@ const checkQualifingCondition = (formData) => {
           ...obj,
           // ...carObj,
           "Focus Model Qualification": "YES",
+          "Discount": Discount,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
@@ -162,6 +166,7 @@ const checkQualifingCondition = (formData) => {
           ...obj,
           ...carObj,
           "Focus Model Qualification": "No",
+          "Discount": Discount,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
@@ -186,6 +191,8 @@ ipcMain.on('form-submit', (event, formData) => {
   qualifiedRM = EWfunc(qualifiedRM, formData);
   qualifiedRM = CCPfunc(qualifiedRM,formData);
   qualifiedRM = MSSFfunc(qualifiedRM, formData);
+  qualifiedRM = DiscountFunc(qualifiedRM,formData);
+  qualifiedRM = ExchangeFunc(qualifiedRM,formData);
 
 
 
