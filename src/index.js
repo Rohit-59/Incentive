@@ -24,6 +24,10 @@ const createWindow = () => {
 //Separate Calculation Functions
 const MGAfunc = require('./functions/MGACalculation');
 const CDIfunc = require('./functions/CDICalculation');
+const EWfunc = require('./functions/EWCalculation');
+const CCPfunc = require('./functions/CCPCalculation');
+const MSSFfunc = require('./functions/MSSFCalculation');
+
 
 
 // Global Variables
@@ -60,6 +64,9 @@ const checkQualifingCondition = (formData) => {
   salesExcelDataSheet.forEach((item) => {
     let numberCheck = 0;
     let EWCheck = 0;
+    let EWPCheck = 0;
+    let CCPcheck = 0;
+    let MSSFcheck = 0;
     let autoCardCheck = 0;
     let obj = {};
     let carObj = {
@@ -87,6 +94,19 @@ const checkQualifingCondition = (formData) => {
     }
 
     DSE_NoOfSoldCarExcelDataArr.forEach((sold) => {
+
+     if(parseInt(sold["CCP PLUS"]) >0){
+      CCPcheck++;
+     }
+     if(sold["Financer REMARK"] == "MSSF"){
+      MSSFcheck++;
+     }
+     if(parseInt(sold["Extended Warranty"]) >0){
+      EWPCheck++;
+     }
+     
+
+
 
       if (formData.QC.focusModel.includes(sold["Model Name"])) {
         numberCheck++;
@@ -128,6 +148,9 @@ const checkQualifingCondition = (formData) => {
           ...obj,
           ...carObj,
           "Focus Model Qualification": "YES",
+          "EW Penetration" : (EWPCheck/numberCheck)*100,
+          "CCP":  (CCPcheck/numberCheck)*100,
+          "MSSF": (MSSFcheck/numberCheck)*100,
           "Grand Total": numberCheck
         }
         qualifiedRM.push(obj)
@@ -136,13 +159,16 @@ const checkQualifingCondition = (formData) => {
           ...obj,
           ...carObj,
           "Focus Model Qualification": "No",
+          "EW Penetration" : (EWPCheck/numberCheck)*100,
+          "CCP":  (CCPcheck/numberCheck)*100,
+          "MSSF": (MSSFcheck/numberCheck)*100,
           "Grand Total": numberCheck
         }
         nonQualifiedRM.push(obj)
       }
     }
   })
-  // console.log("qualifiedRM : ", qualifiedRM)
+  console.log("qualifiedRM : ", qualifiedRM)
   // console.log("nonQualifiedRM : ", nonQualifiedRM)
   // console.log("Qualifying DSE", qualifiedRM);
 
@@ -154,7 +180,15 @@ ipcMain.on('form-submit', (event, formData) => {
   checkQualifingCondition(formData);
   perCarincentiveCalculation(formData);
   qualifiedRM = CDIfunc(qualifiedRM,CDIdata,formData);
+  qualifiedRM = EWfunc(qualifiedRM, formData);
+  qualifiedRM = CCPfunc(qualifiedRM,formData);
+  qualifiedRM = MSSFfunc(qualifiedRM, formData);
+
+  qualifiedRM["Total Incentive"] = qualifiedRM["Total Incentive"] + qualifiedRM["EW Incentive"] + qualifiedRM["CCP Incentive"]+ qualifiedRM["MSSF Incentive"] + qualifiedRM["CDI Incentive"];
+
   qualifiedRM = MGAfunc(qualifiedRM, MGAdata, formData);
+
+  qualifiedRM["Total Incentive"] = qualifiedRM["Total Incentive"] + qualifiedRM["MGA Incentive"];
   console.log(qualifiedRM);
   
 });

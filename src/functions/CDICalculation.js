@@ -16,9 +16,9 @@ qualifiedRM.forEach(element => {
  
     for (const incentive of formData.CDI) {
         if (
-            (incentive.type === 'greater' && cdiScore > incentive.cdiValue) ||
-            (incentive.type === 'less' && cdiScore < incentive.cdiValue) ||
-            (incentive.type === 'range' && cdiScore >= incentive.cdiMin && cdi <= incentive.cdiMax)
+            (incentive.type === 'greater' && cdiScore >= incentive.cdiValue) ||
+            (incentive.type === 'less' && cdiScore <= incentive.cdiValue) ||
+            (incentive.type === 'range' && cdiScore >= incentive.cdiMin && cdiScore <= incentive.cdiMax)
         ) {
             CDIIncentive = incentive.incentive;
         }
