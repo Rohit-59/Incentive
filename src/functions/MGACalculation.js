@@ -27,8 +27,11 @@ qualifiedRM.forEach(element => {
         }
     }
 
-element["MGA Incentive"] = (element["Total Incentive"]*MGAIncentive)/100;
-    
+    element["Total Incentive"] = element["Total Incentive"] + element["EW Incentive"] + element["CCP Incentive"]+ element["MSSF Incentive"] + element["CDI Incentive"];
+
+  element["MGA Incentive"] = (element["Total Incentive"]*MGAIncentive)/100;
+
+    element["Total Incentive"] = element["Total Incentive"] + element["MGA Incentive"];
 
 });
 

@@ -479,20 +479,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+function populateTable(data) {
+      const table = document.querySelector("table");
+      table.innerHTML = "";
+
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      for (const key in data[0]) {
+
+        const th = document.createElement("th");
+        th.innerText = key;
+        headerRow.appendChild(th);
+
+      }
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+      const tbody = document.createElement("tbody");
+      data.forEach((row) => {
+
+        const tr = document.createElement("tr");
+        for (const key in row) {
+          const td = document.createElement("td");
+          td.innerText = row[key];
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+    }
+
+ipcRenderer.on("dataForExcel", (event, data) => {
+    populateTable(data);
+  });
 
 
 ipcRenderer.on("data-error", (event, errorMessage) => {
     console.error(errorMessage);
 });
  
-
-
-
-
-
-
-
-
 
 
 
