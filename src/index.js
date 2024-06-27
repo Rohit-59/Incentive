@@ -29,7 +29,7 @@ const CCPfunc = require('./functions/CCPCalculation');
 const MSSFfunc = require('./functions/MSSFCalculation');
 const DiscountFunc = require('./functions/DiscountCalculation')
 const ExchangeFunc = require('./functions/ExchangeStatusCalculation')
-
+const ComplaintFunc = require('./functions/ComplaintCalculation');
 
 // Global Variables
 let MGAdata = [];
@@ -40,7 +40,10 @@ let nonQualifiedRM = [];
 
 
   const perCarincentiveCalculation = (formData) => {
+
+
   qualifiedRM.forEach((record) => {
+
     let soldCar = parseInt(record["Grand Total"]);
     let perCarIncentive = 0;
 
@@ -52,6 +55,12 @@ let nonQualifiedRM = [];
         // console.log("perCarIncentive ::::::::::::::::::",perCarIncentive);
       }
     });
+
+
+    const lastIncentive = formData.carIncentive[formData.carIncentive.length - 1].incentive;
+      if (soldCar > parseInt(formData.carIncentive[formData.carIncentive.length - 1].cars)) {
+          perCarIncentive = lastIncentive;
+      }
 
     // Add the incentive to the record
     record["Per Car Incentive"] = perCarIncentive;
@@ -67,6 +76,7 @@ const checkQualifingCondition = (formData) => {
 
     let numberCheck = 0;
     let Discount = 0;
+    let ComplaintCheck = 0;
     let EWCheck = 0;
     let EWPCheck = 0;
     let ExchangeStatusCheck = 0;
@@ -103,6 +113,8 @@ const checkQualifingCondition = (formData) => {
 
      Discount = Discount + parseInt(sold["FINAL DISCOUNT"]); 
 
+     
+
      if(parseInt(sold["CCP PLUS"]) >0){
       CCPcheck++;
      }
@@ -114,6 +126,9 @@ const checkQualifingCondition = (formData) => {
      }
      if(sold["Exchange Status"] == 'YES' || sold["Exchange Status"] == 'yes'  ){
       ExchangeStatusCheck++;
+     }
+     if(sold["Complaint Status"] == 'YES' || sold["Complaint Status"] == 'yes'  ){
+      ComplaintCheck++;
      }
 
   TotalNumberCheck++;
@@ -160,6 +175,7 @@ const checkQualifingCondition = (formData) => {
           "Focus Model Qualification": "YES",
           "Discount": Discount,
           "Exchange Status" : ExchangeStatusCheck,
+          "Complaints":ComplaintCheck,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
@@ -173,6 +189,7 @@ const checkQualifingCondition = (formData) => {
           "Focus Model Qualification": "No",
           "Discount": Discount,
           "Exchange Status" : ExchangeStatusCheck,
+          "Complaints":ComplaintCheck,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
@@ -199,6 +216,7 @@ ipcMain.on('form-submit', (event, formData) => {
   qualifiedRM = MSSFfunc(qualifiedRM, formData);
   qualifiedRM = DiscountFunc(qualifiedRM,formData);
   qualifiedRM = ExchangeFunc(qualifiedRM,formData);
+  qualifiedRM = ComplaintFunc(qualifiedRM,formData);
 
 
 

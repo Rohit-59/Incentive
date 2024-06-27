@@ -66,7 +66,7 @@
       <button type="button" id="addInputButton">Add Input</button>
       <div id="cdiInputs"></div>
 
-
+     
 
       <h2 style="color: #1F1A17;">Per Car Incentive</h2>
       <div id="pairs-container" style="color: #1F1A17; margin-top: 20px;">
@@ -80,6 +80,30 @@
       </div>
 
 
+      <h2 style="color: #1F1A17;">Per Model Incentive</h2>
+
+      <div id="perModelPairContainer">
+        <div class="perModelPairContainer">
+            <label for="carModel1">Car Model:</label>
+            <select id="carModel1">
+                <option value="ALTO">ALTO</option>
+                <option value="K-10">K-10</option>
+                <option value="S-Presso">S-Presso</option>
+                <option value="CELERIO">CELERIO</option>
+                <option value="WagonR">WagonR</option>
+                <option value="BREZZA">BREZZA</option>
+                <option value="DZIRE">DZIRE</option>
+                <option value="EECO">EECO</option>
+                <option value="Ertiga">Ertiga</option>
+                <option value="SWIFT">SWIFT</option>
+            </select>
+            <label for="incentive1">Incentive:</label>
+            <input type="number" id="incentive1" placeholder="Enter incentive amount">
+        </div>
+    </div>
+    <button type="button" id="addPerModelPairButton">Add Another Model Incentive Pair</button>
+
+
       <h2 style="color: #1F1A17;">Exchange Status Incentive</h2>
       <div id="Exchange-pairs-container" style="color: #1F1A17; margin-top: 20px;">
         <div class="Exchange-pair-container">
@@ -89,6 +113,19 @@
           <input type="number" name="incentive" step="0.01">
         </div>
         <button type="button" id="addExchangePairButton">Add Exchange Pair</button>
+      </div>
+
+
+
+      <h2 style="color: #1F1A17;">Complaint Status Deduction</h2>
+      <div id="Complaint-pairs-container" style="color: #1F1A17; margin-top: 20px;">
+        <div class="Complaint-pair-container">
+          <label for="complaint" style="color: #1F1A17;">Complaint No:</label>
+          <input type="number" name="complaint">
+          <label for="incentive" style="color: #1F1A17;">Incentive:</label>
+          <input type="number" name="incentive" step="0.01">
+        </div>
+        <button type="button" id="addComplaintPairButton">Add Complaint Pair</button>
       </div>
 
 

@@ -8,6 +8,9 @@ let EWInputs = [];
 let CCPInputs = [];
 let MSSFInputs = [];
 let DiscountInputs = [];
+let ComplaintInputs = [];
+let perModelInputs = [];
+let pairCount = 1;
 
 
 
@@ -206,7 +209,7 @@ const addDiscountInputFields = (DinputsContainer) => {
             <input type="number" step="any" name="amountMin" required>
             <label for="amountMax">Amount Maximum (Rs):</label>
             <input type="number" step="any" name="amountMax">
-            <label for="incentive">Incentive (Rs):</label>
+            <label for="incentive">Incentive (%):</label>
             <input type="number" step="any"  name="incentive" required>
         </div>
     `;
@@ -357,6 +360,28 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 
 
+
+    // Complaint Pair
+
+
+    const addComplaintPairButton = document.getElementById('addComplaintPairButton');
+    addComplaintPairButton.addEventListener('click', () => {
+
+        const pairContainer = document.getElementById('Complaint-pairs-container');
+        const div = document.createElement('div');
+        div.className = 'Complaint-pair-container';
+
+        div.innerHTML = `
+        <label for="complaint">Complaint No:</label>
+        <input type="number" name="complaint">
+        <label for="incentive">Incentive:</label>
+        <input type="number" name="incentive" step="0.01">
+    `;
+        pairContainer.insertBefore(div, pairContainer.lastElementChild);
+
+    })
+
+
     // For MGA incentive
     // const addMGAInput = document.getElementById('addMGAInput');
     // addMGAInput.addEventListener('click', () => {
@@ -380,7 +405,6 @@ document.addEventListener("DOMContentLoaded", function () {
     //    For CCP input
 
    const addCCPInputButton = document.getElementById('addCCPInputButton');
-
    addCCPInputButton.addEventListener('click',()=>{
    const CCPinputType = document.getElementById('CCPinputType');
   const selectedType = CCPinputType.value;
@@ -394,12 +418,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
    const addDiscountInputButton = document.getElementById('addDiscountInputButton');
-  
-
    addDiscountInputButton.addEventListener('click',()=>{
     const DiscountContainer = document.getElementById('DiscountInputsContainer');
     addDiscountInputFields(DiscountContainer);
    })
+
+
+
+   // For Per Model Input
+
+   
+   const addPerModelPairButton = document.getElementById('addPerModelPairButton')
+        addPerModelPairButton.addEventListener('click', function() {
+            pairCount++;
+            const perModelPairContainer = document.getElementById('perModelPairContainer');
+
+            const newPairHTML = `
+                <div class="perModelPairContainer">
+                    <label for="carModel${pairCount}">Car Model:</label>
+                    <select id="carModel${pairCount}">
+                        <option value="ALTO">ALTO</option>
+                        <option value="K-10">K-10</option>
+                        <option value="S-Presso">S-Presso</option>
+                        <option value="CELERIO">CELERIO</option>
+                        <option value="WagonR">WagonR</option>
+                        <option value="BREZZA">BREZZA</option>
+                        <option value="DZIRE">DZIRE</option>
+                        <option value="EECO">EECO</option>
+                        <option value="Ertiga">Ertiga</option>
+                        <option value="SWIFT">SWIFT</option>
+                    </select>
+                    <label for="incentive${pairCount}">Incentive:</label>
+                    <input type="number" id="incentive${pairCount}" placeholder="Enter incentive amount">
+                </div>
+            `;
+
+            perModelPairContainer.insertAdjacentHTML('beforeend', newPairHTML);
+        });
    
 
 
@@ -474,6 +529,24 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         ExchangePairs.push(exchangePair);
+    }
+
+
+
+
+    const ComplaintpairContainers = document.getElementsByClassName('Complaint-pair-container');
+    for (let i = 0; i < ComplaintpairContainers.length; i++) {
+        const ComplaintpairContainer = ComplaintpairContainers[i];
+        const complaintInput = ComplaintpairContainer.querySelector('input[name="complaint"]');
+        const incentiveInput = ComplaintpairContainer.querySelector('input[name="incentive"]');
+
+
+        const exchangePair = {
+            ComplaintNumber: complaintInput.value,
+            incentive: incentiveInput.value
+        };
+
+        ComplaintInputs.push(exchangePair);
     }
 
 
@@ -593,16 +666,29 @@ document.addEventListener("DOMContentLoaded", function () {
                     MGAranges.push(incentive);
                 });            
 
+               
+                for (let i = 1; i <= pairCount; i++) {
 
+                    const perModelCarPairs = {};
+
+                    const carModel = document.getElementById(`carModel${i}`).value;
+                    const incentive = document.getElementById(`incentive${i}`).value;
+                    
+
+                    perModelCarPairs[carModel] = incentive;
+                    perModelInputs.push(perModelCarPairs);
+                }
 
 
     finalObj["QC"] = qcData;
     finalObj["CDI"] = cdiIncentives;
     finalObj["carIncentive"] = carPairs;
     finalObj["ExchangeInputs"] = ExchangePairs;
+    finalObj["ComplaintInputs"] = ComplaintInputs;
     finalObj["DiscountInputs"] = DiscountInputs;
     finalObj["MGAIncentive"] = MGAranges;
     finalObj["Extended Warranty"] = EWInputs;
+    finalObj["PerModelIncentive"] = perModelInputs;
     finalObj["CCP"] = CCPInputs;
     finalObj["MSSF"] = MSSFInputs;
     console.log('FinalObj', finalObj);
