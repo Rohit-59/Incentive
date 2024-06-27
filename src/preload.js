@@ -11,48 +11,48 @@ let DiscountInputs = [];
 
 
 
-function MGAcreateInputField(type) {
-    const div = document.createElement('div');
-    div.className = 'range-input';
-    div.dataset.rangeType = type
+// function MGAcreateInputField(type) {
+//     const div = document.createElement('div');
+//     div.className = 'range-input';
+//     div.dataset.rangeType = type
 
-    if (type === 'lessThan') {
-        div.innerHTML = `
-          <label>Value:</label>
-          <input type="number" name="lessThanValue" step="any">
-          <label>Percentage Incentive (%):</label>
-          <input type="number" name="lessThanIncentive" step="any">
-      `;
-    } else if (type === 'greaterThan') {
-        div.innerHTML = `
-          <label>Value:</label>
-          <input type="number" name="greaterThanValue" step="any">
-          <label>Percentage Incentive (%):</label>
-          <input type="number" name="greaterThanIncentive" step="any">
-      `;
-    } else if (type === 'between') {
-        div.innerHTML = `
-          <label>From:</label>
-          <input type="number" name="betweenValue1" step="any">
-          <label>To:</label>
-          <input type="number" name="betweenValue2" step="any">
-          <label>Percentage Incentive (%):</label>
-          <input type="number" name="betweenIncentive" step="any">
-      `;
-    }
-    return div;
-}
+//     if (type === 'lessThan') {
+//         div.innerHTML = `
+//           <label>Value:</label>
+//           <input type="number" name="lessThanValue" step="any">
+//           <label>Percentage Incentive (%):</label>
+//           <input type="number" name="lessThanIncentive" step="any">
+//       `;
+//     } else if (type === 'greaterThan') {
+//         div.innerHTML = `
+//           <label>Value:</label>
+//           <input type="number" name="greaterThanValue" step="any">
+//           <label>Percentage Incentive (%):</label>
+//           <input type="number" name="greaterThanIncentive" step="any">
+//       `;
+//     } else if (type === 'between') {
+//         div.innerHTML = `
+//           <label>From:</label>
+//           <input type="number" name="betweenValue1" step="any">
+//           <label>To:</label>
+//           <input type="number" name="betweenValue2" step="any">
+//           <label>Percentage Incentive (%):</label>
+//           <input type="number" name="betweenIncentive" step="any">
+//       `;
+//     }
+//     return div;
+// }
 
 
-function addRange(type, value1, value2, incentive) {
-    if (type === 'lessThan') {
-        MGAranges.push({ type: 'lessThan', value: value1, incentive: incentive });
-    } else if (type === 'greaterThan') {
-        MGAranges.push({ type: 'greaterThan', value: value1, incentive: incentive });
-    } else if (type === 'between') {
-        MGAranges.push({ type: 'between', from: value1, to: value2, incentive: incentive });
-    }
-}
+// function addRange(type, value1, value2, incentive) {
+//     if (type === 'lessThan') {
+//         MGAranges.push({ type: 'lessThan', value: value1, incentive: incentive });
+//     } else if (type === 'greaterThan') {
+//         MGAranges.push({ type: 'greaterThan', value: value1, incentive: incentive });
+//     } else if (type === 'between') {
+//         MGAranges.push({ type: 'between', from: value1, to: value2, incentive: incentive });
+//     }
+// }
 
 
 const addEWInputFields = (type, EWinputsContainer) => {
@@ -203,14 +203,30 @@ const addDiscountInputFields = (DinputsContainer) => {
     const inputFields = `
         <div class="DinputGroup">
             <label for="amountMin">Amount Minimum (Rs):</label>
-            <input type="number" step="0.01" name="amountMin" required>
+            <input type="number" step="any" name="amountMin" required>
             <label for="amountMax">Amount Maximum (Rs):</label>
-            <input type="number" step="0.01" name="amountMax">
+            <input type="number" step="any" name="amountMax">
             <label for="incentive">Incentive (Rs):</label>
-            <input type="number" name="incentive" required>
+            <input type="number" step="any"  name="incentive" required>
         </div>
     `;
     DinputsContainer.insertAdjacentHTML('beforeend', inputFields);
+};
+
+
+
+const addMGAInputFields = (MGAinputsContainer) => {
+    const inputFields = `
+        <div class="MGAinputGroup">
+            <label for="amountMin">Amount Minimum (Rs):</label>
+            <input type="number" step="any"  name="amountMin" required>
+            <label for="amountMax">Amount Maximum (Rs):</label>
+            <input type="number" step="any"  name="amountMax">
+            <label for="incentive">Incentive (%):</label>
+            <input type="number" step="any"  name="incentive" required>
+        </div>
+    `;
+    MGAinputsContainer.insertAdjacentHTML('beforeend', inputFields);
 };
 
 
@@ -342,16 +358,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // For MGA incentive
+    // const addMGAInput = document.getElementById('addMGAInput');
+    // addMGAInput.addEventListener('click', () => {
+
+    //     const rangeType = document.getElementById('rangeType').value;
+    //     const MGAinputsContainer = document.getElementById('MGAinputsContainer');
+    //     const newInputField = MGAcreateInputField(rangeType);
+    //     MGAinputsContainer.appendChild(newInputField);
+
+    // })
+
     const addMGAInput = document.getElementById('addMGAInput');
     addMGAInput.addEventListener('click', () => {
 
-        const rangeType = document.getElementById('rangeType').value;
         const MGAinputsContainer = document.getElementById('MGAinputsContainer');
-        const newInputField = MGAcreateInputField(rangeType);
-        MGAinputsContainer.appendChild(newInputField);
+        addMGAInputFields(MGAinputsContainer);
 
     })
-
 
 
     //    For CCP input
@@ -455,24 +478,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    const MGinputsContainer = document.getElementById('MGAinputsContainer');
-    MGinputsContainer.querySelectorAll('.range-input').forEach(inputDiv => {
-        const rangeType = inputDiv.dataset.rangeType;
-        if (rangeType === 'lessThan') {
-            const value = parseFloat(inputDiv.querySelector('[name="lessThanValue"]').value);
-            const incentive = parseFloat(inputDiv.querySelector('[name="lessThanIncentive"]').value);
-            addRange('lessThan', value, null, incentive);
-        } else if (rangeType === 'greaterThan') {
-            const value = parseFloat(inputDiv.querySelector('[name="greaterThanValue"]').value);
-            const incentive = parseFloat(inputDiv.querySelector('[name="greaterThanIncentive"]').value);
-            addRange('greaterThan', value, null, incentive);
-        } else if (rangeType === 'between') {
-            const fromValue = parseFloat(inputDiv.querySelector('[name="betweenValue1"]').value);
-            const toValue = parseFloat(inputDiv.querySelector('[name="betweenValue2"]').value);
-            const incentive = parseFloat(inputDiv.querySelector('[name="betweenIncentive"]').value);
-            addRange('between', fromValue, toValue, incentive);
-        }
-    });
+    // const MGinputsContainer = document.getElementById('MGAinputsContainer');
+
+    // MGinputsContainer.querySelectorAll('.range-input').forEach(inputDiv => {
+    //     const rangeType = inputDiv.dataset.rangeType;
+    //     if (rangeType === 'lessThan') {
+    //         const value = parseFloat(inputDiv.querySelector('[name="lessThanValue"]').value);
+    //         const incentive = parseFloat(inputDiv.querySelector('[name="lessThanIncentive"]').value);
+    //         addRange('lessThan', value, null, incentive);
+    //     } else if (rangeType === 'greaterThan') {
+    //         const value = parseFloat(inputDiv.querySelector('[name="greaterThanValue"]').value);
+    //         const incentive = parseFloat(inputDiv.querySelector('[name="greaterThanIncentive"]').value);
+    //         addRange('greaterThan', value, null, incentive);
+    //     } else if (rangeType === 'between') {
+    //         const fromValue = parseFloat(inputDiv.querySelector('[name="betweenValue1"]').value);
+    //         const toValue = parseFloat(inputDiv.querySelector('[name="betweenValue2"]').value);
+    //         const incentive = parseFloat(inputDiv.querySelector('[name="betweenIncentive"]').value);
+    //         addRange('between', fromValue, toValue, incentive);
+    //     }
+    // });
 
 
 
@@ -552,6 +576,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     };
                     DiscountInputs.push(incentive);
                 });
+
+
+
+                const MGAinputGroups = document.querySelectorAll('.MGAinputGroup');
+                MGAinputGroups.forEach(inputDiv => {
+                    const amountMinInput = inputDiv.querySelector('[name="amountMin"]');
+                    const amountMaxInput = inputDiv.querySelector('[name="amountMax"]');
+                    const incentiveInput = inputDiv.querySelector('[name="incentive"]');
+
+                    const incentive = {
+                        min: parseFloat(amountMinInput.value),
+                        max: amountMaxInput.value ? parseFloat(amountMaxInput.value) : null,
+                        incentive: parseFloat(incentiveInput.value)
+                    };
+                    MGAranges.push(incentive);
+                });            
 
 
 

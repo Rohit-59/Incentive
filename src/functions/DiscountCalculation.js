@@ -15,7 +15,7 @@ module.exports =  (qualifiedRM, formData) => {
                     break;
                 }
             } else {
-                if (userValue >= incentive.min && userValue <= incentive.max) {
+                if (userValue >= incentive.min && userValue < incentive.max) {
                     element["Discount Incentive"] = incentive.incentive;
                     break;
                 }

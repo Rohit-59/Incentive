@@ -69,6 +69,7 @@ const checkQualifingCondition = (formData) => {
     let Discount = 0;
     let EWCheck = 0;
     let EWPCheck = 0;
+    let ExchangeStatusCheck = 0;
     let TotalNumberCheck = 0;
     let CCPcheck = 0;
     let MSSFcheck = 0;
@@ -110,6 +111,9 @@ const checkQualifingCondition = (formData) => {
      }
      if(parseInt(sold["Extended Warranty"]) >0){
       EWPCheck++;
+     }
+     if(sold["Exchange Status"] == 'YES' || sold["Exchange Status"] == 'yes'  ){
+      ExchangeStatusCheck++;
      }
 
   TotalNumberCheck++;
@@ -155,6 +159,7 @@ const checkQualifingCondition = (formData) => {
           // ...carObj,
           "Focus Model Qualification": "YES",
           "Discount": Discount,
+          "Exchange Status" : ExchangeStatusCheck,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
@@ -167,6 +172,7 @@ const checkQualifingCondition = (formData) => {
           ...carObj,
           "Focus Model Qualification": "No",
           "Discount": Discount,
+          "Exchange Status" : ExchangeStatusCheck,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,

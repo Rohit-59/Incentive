@@ -11,7 +11,7 @@ qualifiedRM.forEach(element => {
  element["CDI Score"] = result["CDI"];
 
  const cdiScore = parseFloat(element["CDI Score"]);
- let CDIIncentive; 
+ let CDIIncentive = 0; 
 
  
     for (const incentive of formData.CDI) {
