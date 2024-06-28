@@ -33,11 +33,14 @@ const ComplaintFunc = require('./functions/ComplaintCalculation');
 const PerModelCarFunc = require('./functions/PerModelCalculation');
 const SpecialCarFunc = require('./functions/SpecialCarCalculation');
 const PerCarFunc = require('./functions/PerCarCalculation');
+const MSRFunc = require('./functions/MSRCalculation');
+const SuperCarFunc = require('./functions/SuperCarCalculation');
 
 // Global Variables
 let MGAdata = [];
 let CDIdata = [];
 let salesExcelDataSheet = [];
+let employeeStatusDataSheet = [];
 let qualifiedRM = [];
 let nonQualifiedRM = [];
 
@@ -58,6 +61,7 @@ const checkQualifingCondition = (formData) => {
     let MSSFcheck = 0;
     let autoCardCheck = 0;
     let obj = {};
+    let MSRcheck = 0;
 
     let carObj = {
       "ALTO": 0,
@@ -103,6 +107,9 @@ const checkQualifingCondition = (formData) => {
      }
      if(sold["Complaint Status"] == 'YES' || sold["Complaint Status"] == 'yes'  ){
       ComplaintCheck++;
+     }
+     if(sold["Autocard"] == 'YES' || sold["Autocard"] == 'yes'){
+      MSRcheck++;
      }
 
   TotalNumberCheck++;
@@ -151,6 +158,7 @@ const checkQualifingCondition = (formData) => {
           "Exchange Status" : ExchangeStatusCheck,
           "Complaints":ComplaintCheck,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
+          "MSR": (MSRcheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
           "Grand Total": TotalNumberCheck
@@ -165,6 +173,7 @@ const checkQualifingCondition = (formData) => {
           "Exchange Status" : ExchangeStatusCheck,
           "Complaints":ComplaintCheck,
           "EW Penetration" : (EWPCheck/TotalNumberCheck)*100,
+          "MSR": (MSRcheck/TotalNumberCheck)*100,
           "CCP":  (CCPcheck/TotalNumberCheck)*100,
           "MSSF": (MSSFcheck/TotalNumberCheck)*100,
           "Grand Total": TotalNumberCheck
@@ -190,13 +199,16 @@ ipcMain.on('form-submit', (event, formData) => {
   qualifiedRM = SpecialCarFunc(qualifiedRM,formData);
   qualifiedRM = PerModelCarFunc(qualifiedRM,formData);
   qualifiedRM = CDIfunc(qualifiedRM,CDIdata,formData);
+  qualifiedRM = SuperCarFunc(qualifiedRM,MGAdata,salesExcelDataSheet,formData)
   qualifiedRM = EWfunc(qualifiedRM, formData);
   qualifiedRM = CCPfunc(qualifiedRM,formData);
   qualifiedRM = MSSFfunc(qualifiedRM, formData);
+  qualifiedRM = MSRFunc(qualifiedRM,formData);
   qualifiedRM = DiscountFunc(qualifiedRM,formData);
   qualifiedRM = ExchangeFunc(qualifiedRM,formData);
   qualifiedRM = ComplaintFunc(qualifiedRM,formData);
   qualifiedRM = MGAfunc(qualifiedRM, MGAdata, formData);
+  
 
    console.log(qualifiedRM);
 
@@ -234,6 +246,17 @@ ipcMain.on('file-selected-salesExcel', (event, path) => {
   })
 
 
+  console.log("MGA", MGAdata);
+
+
+
+
+  // const employeeStatusSheetName = workbook.SheetNames[3];
+  // const employeeStatusSheet = workbook.Sheets[employeeStatusSheetName];
+  // employeeStatusDataSheet = XLSX.utils.sheet_to_json(employeeStatusSheet);
+  // console.log("Object inside array employeeStatus", JSON.stringify(employeeStatusDataSheet));
+
+
   salesSheetData.shift();
   let groupedData = {};
   salesSheetData.forEach(row => {
@@ -250,7 +273,7 @@ ipcMain.on('file-selected-salesExcel', (event, path) => {
       salesExcelDataSheet.push(obj);
     }
   }
-  // console.log("Object inside array Sales excel", JSON.stringify(salesExcelDataSheet));
+  console.log("Object inside array Sales excel", JSON.stringify(salesExcelDataSheet));
 });
 
 

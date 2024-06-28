@@ -24,7 +24,7 @@ module.exports =  (qualifiedRM, formData) => {
     
         // Add the incentive to the record
         record["Per Car Incentive"] = perCarIncentive;
-        record["Total Car Incentive"] = soldCar * perCarIncentive;
+        record["Total PerCar Incentive"] = soldCar * perCarIncentive;
         record["Total Incentive"] = soldCar * perCarIncentive;
       });
     

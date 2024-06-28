@@ -1,5 +1,5 @@
 
-module.exports =  (qualifiedRM, CDIdata, formData) => {
+module.exports =  (qualifiedRM, formData) => {
 
  
     qualifiedRM.forEach(element => {
@@ -9,9 +9,9 @@ module.exports =  (qualifiedRM, CDIdata, formData) => {
     
     let specialCarIncentive = 0;
     
-    for (const model in formData.SpecialCarIncentive[0]) {
+    for (const model in formData.SpecialCarIncentive) {
         if (element.hasOwnProperty(model) && element[model] > 0) {
-             specialCarIncentive += element[model] * formData.SpecialCarIncentive[0][model];
+             specialCarIncentive += element[model] * formData.SpecialCarIncentive[model];
         }
     }
     

@@ -17,16 +17,7 @@ qualifiedRM.forEach(element => {
    
 
     for (const range of formData["MGAIncentive"]) {
-        // if (range.type === 'lessThan' && mgaValue < range.value) {
-        //     MGAIncentive = range.incentive;
-        //     break;
-        // } else if (range.type === 'greaterThan' && mgaValue > range.value) {
-        //     MGAIncentive = range.incentive;
-        //     break;
-        // } else if (range.type === 'between' && mgaValue >= range.from && mgaValue <= range.to) {
-        //     MGAIncentive = range.incentive;
-        //     break;
-        // }
+     
 
         if (range.max === null) {
             if (mgaValue >= range.min) {
@@ -42,11 +33,11 @@ qualifiedRM.forEach(element => {
     
     }
 
-    element["Total Incentive"] = element["Total Incentive"] + element["EW Incentive"] + element["CCP Incentive"]+ element["MSSF Incentive"] + element["CDI Incentive"] + parseFloat(element["Discount Incentive"]) + parseFloat(element["Exchange Incentive"])  + element["PerModel Incentive"] +  element["Complaint Deduction"];
+    element["Total Incentive"] = parseFloat(element["Total Incentive"]) + parseFloat(element["EW Incentive"]) + parseFloat(element["CCP Incentive"])+ parseFloat(element["MSSF Incentive"]) + parseFloat(element["CDI Incentive"]) + parseFloat(element["Discount Incentive"]) + parseFloat(element["Exchange Incentive"])  + parseFloat(element["PerModel Incentive"]) +  parseFloat(element["Complaint Deduction"]) + parseFloat(element["MSR Incentive"])  ;
 
-  element["MGA Incentive"] = ((parseFloat(MGAforCalculation)*parseFloat(MGAIncentive)))/100;
+    element["MGA Incentive"] = ((parseFloat(MGAforCalculation)*parseFloat(MGAIncentive)))/100;
 
-    element["Total Incentive"] = element["Total Incentive"] + element["MGA Incentive"];
+    element["Total Incentive"] = parseFloat(element["Total Incentive"]) + parseFloat(element["MGA Incentive"]);
 
 });
 

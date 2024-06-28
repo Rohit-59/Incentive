@@ -9,6 +9,7 @@ let CCPInputs = [];
 let MSSFInputs = [];
 let DiscountInputs = [];
 let ComplaintInputs = [];
+let MSRinputs = [];
 
 let pairCount = 1;
 let specialCarPairCount = 1;
@@ -16,48 +17,6 @@ let specialCarPairCount = 1;
 
 
 
-// function MGAcreateInputField(type) {
-//     const div = document.createElement('div');
-//     div.className = 'range-input';
-//     div.dataset.rangeType = type
-
-//     if (type === 'lessThan') {
-//         div.innerHTML = `
-//           <label>Value:</label>
-//           <input type="number" name="lessThanValue" step="any">
-//           <label>Percentage Incentive (%):</label>
-//           <input type="number" name="lessThanIncentive" step="any">
-//       `;
-//     } else if (type === 'greaterThan') {
-//         div.innerHTML = `
-//           <label>Value:</label>
-//           <input type="number" name="greaterThanValue" step="any">
-//           <label>Percentage Incentive (%):</label>
-//           <input type="number" name="greaterThanIncentive" step="any">
-//       `;
-//     } else if (type === 'between') {
-//         div.innerHTML = `
-//           <label>From:</label>
-//           <input type="number" name="betweenValue1" step="any">
-//           <label>To:</label>
-//           <input type="number" name="betweenValue2" step="any">
-//           <label>Percentage Incentive (%):</label>
-//           <input type="number" name="betweenIncentive" step="any">
-//       `;
-//     }
-//     return div;
-// }
-
-
-// function addRange(type, value1, value2, incentive) {
-//     if (type === 'lessThan') {
-//         MGAranges.push({ type: 'lessThan', value: value1, incentive: incentive });
-//     } else if (type === 'greaterThan') {
-//         MGAranges.push({ type: 'greaterThan', value: value1, incentive: incentive });
-//     } else if (type === 'between') {
-//         MGAranges.push({ type: 'between', from: value1, to: value2, incentive: incentive });
-//     }
-// }
 
 
 const addEWInputFields = (type, EWinputsContainer) => {
@@ -105,6 +64,54 @@ const addEWInputFields = (type, EWinputsContainer) => {
     }
 
     EWinputsContainer.insertAdjacentHTML('beforeend', inputFields);
+};
+
+
+const addMSRInputFields = (type, MSRinputsContainer) => {
+    let inputFields;
+
+    switch(type) {
+        case 'greater':
+            inputFields = `
+                <div class="inputGroup">
+                    <label for="percentageGreaterThan">Percentage Greater Than or Equal To:</label>
+                    <input type="number" step="0.01" name="percentageGreaterThan" required>
+                    <label for="incentive">Incentive (Rs):</label>
+                    <input type="number" name="incentive" required>
+                </div>
+            `;
+            break;
+
+        case 'less':
+            inputFields = `
+                <div class="inputGroup">
+                    <label for="percentageLessThan">Percentage Less Than or Equal To:</label>
+                    <input type="number" step="0.01" name="percentageLessThan" required>
+                    <label for="incentive">Incentive (Rs):</label>
+                    <input type="number" name="incentive" required>
+                </div>
+            `;
+            break;
+
+        case 'range':
+            inputFields = `
+                <div class="inputGroup">
+                    <label for="percentageMin">Percentage Minimum (%):</label>
+                    <input type="number" step="0.01" name="percentageMin" required>
+                    <label for="percentageMax">Percentage Maximum (%):</label>
+                    <input type="number" step="0.01" name="percentageMax" required>
+                    <label for="incentive">Incentive (Rs):</label>
+                    <input type="number" name="incentive" required>
+                </div>
+            `;
+            break;
+
+        default:
+            inputFields = '';
+            break;
+    }
+
+    MSRinputsContainer.insertAdjacentHTML('beforeend', inputFields);
 };
 
 
@@ -307,6 +314,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
    })
 
+
+
+     // For MSR Input
+   
+     const addMSRInputButton = document.getElementById('addMSRInputButton');
+
+     addMSRInputButton.addEventListener('click',()=>{
+     const MSRinputType = document.getElementById('MSRinputType');
+    const selectedType = MSRinputType.value;
+    const MSRContainer = document.getElementById("MSRinputsContainer");
+    addMSRInputFields(selectedType, MSRContainer);
+  
+     })
+
    // For MSSF input
 
 
@@ -384,16 +405,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 
 
-    // For MGA incentive
-    // const addMGAInput = document.getElementById('addMGAInput');
-    // addMGAInput.addEventListener('click', () => {
-
-    //     const rangeType = document.getElementById('rangeType').value;
-    //     const MGAinputsContainer = document.getElementById('MGAinputsContainer');
-    //     const newInputField = MGAcreateInputField(rangeType);
-    //     MGAinputsContainer.appendChild(newInputField);
-
-    // })
+    //MGA input
 
     const addMGAInput = document.getElementById('addMGAInput');
     addMGAInput.addEventListener('click', () => {
@@ -462,13 +474,13 @@ document.addEventListener("DOMContentLoaded", function () {
     
         const addSpecialCarPairButton = document.getElementById('addSpecialCarPairButton')
         addSpecialCarPairButton.addEventListener('click', function() {
-            pairCount++;
+            specialCarPairCount++;
             const specialCarPairContainer = document.getElementById('specialCarPairContainer');
 
             const newPairHTML = `
                 <div class="specialCarPairContainer">
-                    <label for="carModel${specialCarPairCount}">Car Model:</label>
-                    <select id="carModel${specialCarPairCount}">
+                    <label for="SCcarModel${specialCarPairCount}">Car Model:</label>
+                    <select id="SCcarModel${specialCarPairCount}">
                         <option value="ALTO">ALTO</option>
                         <option value="K-10">K-10</option>
                         <option value="S-Presso">S-Presso</option>
@@ -480,8 +492,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         <option value="Ertiga">Ertiga</option>
                         <option value="SWIFT">SWIFT</option>
                     </select>
-                    <label for="incentive${specialCarPairCount}">Incentive:</label>
-                    <input type="number" id="incentive${specialCarPairCount}" placeholder="Enter incentive amount">
+                    <label for="SCincentive${specialCarPairCount}">Incentive:</label>
+                    <input type="number" id="SCincentive${specialCarPairCount}" placeholder="Enter incentive amount">
                 </div>
             `;
 
@@ -515,15 +527,24 @@ document.addEventListener("DOMContentLoaded", function () {
    form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-
+    let AC = document.getElementById('autocard');
+    let eW = document.getElementById('ew');
     const finalObj = {};
     const formData = new FormData(form);
     const qcData = {
         numOfCars: formData.get('numCars'),
         focusModel: formData.getAll('carsFM'),
-        autoCard: formData.get('autocard'),
-        EW: formData.get('ew')
+        // autoCard: formData.get('autocard'),
+        // EW: formData.get('ew')
+        autoCard: AC.checked ? 'yes' : 'no',
+        EW: eW.checked ? 'yes' : 'no'
     };
+
+
+    const superCar = {
+        superCarCriteria: formData.getAll('superCarCheck'),
+        superCarIncentive: formData.get('SuperCarIncentive')
+};
 
 
     const cdiIncentives = [...document.querySelectorAll('.cdiInput')].map(div => {
@@ -604,28 +625,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // const MGinputsContainer = document.getElementById('MGAinputsContainer');
-
-    // MGinputsContainer.querySelectorAll('.range-input').forEach(inputDiv => {
-    //     const rangeType = inputDiv.dataset.rangeType;
-    //     if (rangeType === 'lessThan') {
-    //         const value = parseFloat(inputDiv.querySelector('[name="lessThanValue"]').value);
-    //         const incentive = parseFloat(inputDiv.querySelector('[name="lessThanIncentive"]').value);
-    //         addRange('lessThan', value, null, incentive);
-    //     } else if (rangeType === 'greaterThan') {
-    //         const value = parseFloat(inputDiv.querySelector('[name="greaterThanValue"]').value);
-    //         const incentive = parseFloat(inputDiv.querySelector('[name="greaterThanIncentive"]').value);
-    //         addRange('greaterThan', value, null, incentive);
-    //     } else if (rangeType === 'between') {
-    //         const fromValue = parseFloat(inputDiv.querySelector('[name="betweenValue1"]').value);
-    //         const toValue = parseFloat(inputDiv.querySelector('[name="betweenValue2"]').value);
-    //         const incentive = parseFloat(inputDiv.querySelector('[name="betweenIncentive"]').value);
-    //         addRange('between', fromValue, toValue, incentive);
-    //     }
-    // });
-
-
-
     const EWinputsContainer = document.getElementById('EWinputsContainer');
     EWinputsContainer.querySelectorAll('.inputGroup').forEach(inputDiv => {
         const incentive = {};
@@ -642,6 +641,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         incentive.incentive = parseFloat(inputDiv.querySelector('[name="incentive"]').value);
         EWInputs.push(incentive);
+    });
+
+
+
+    const MSRinputsContainer = document.getElementById('MSRinputsContainer');
+    MSRinputsContainer.querySelectorAll('.inputGroup').forEach(inputDiv => {
+        const incentive = {};
+        if (inputDiv.querySelector('[name="percentageGreaterThan"]')) {
+            incentive.type = 'greater';
+            incentive.value = parseFloat(inputDiv.querySelector('[name="percentageGreaterThan"]').value);
+        } else if (inputDiv.querySelector('[name="percentageLessThan"]')) {
+            incentive.type = 'less';
+            incentive.value = parseFloat(inputDiv.querySelector('[name="percentageLessThan"]').value);
+        } else if (inputDiv.querySelector('[name="percentageMin"]') && inputDiv.querySelector('[name="percentageMax"]')) {
+            incentive.type = 'range';
+            incentive.min = parseFloat(inputDiv.querySelector('[name="percentageMin"]').value);
+            incentive.max = parseFloat(inputDiv.querySelector('[name="percentageMax"]').value);
+        }
+        incentive.incentive = parseFloat(inputDiv.querySelector('[name="incentive"]').value);
+        MSRinputs.push(incentive);
     });
 
 
@@ -720,34 +739,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 });            
 
                 let perModelCarPairs = {};
-                for (let i = 1; i <= pairCount; i++) {
+     
+                const selectElement = document.getElementById('sectionSelect');
+                const selectedValue = selectElement.value;
+                if(selectedValue === 'perModelIncentive'  ){
+                    for (let i = 1; i <= pairCount; i++) {
 
-                    const carModel = document.getElementById(`carModel${i}`).value;
-                    const incentive = document.getElementById(`incentive${i}`).value;
-                    
-                    perModelCarPairs[carModel] = incentive;
-                    // perModelInputs.push(perModelCarPairs);
+                        const carModel = document.getElementById(`carModel${i}`).value;
+                        const incentive = document.getElementById(`incentive${i}`).value;
+                        
+                        perModelCarPairs[carModel] = incentive;
+                        // perModelInputs.push(perModelCarPairs);
+                    }
                 }
+               
  
 
                 let specialCarPairs = {};
 
                 for (let i = 1; i <= specialCarPairCount; i++) {
 
-                    const carModel = document.getElementById(`carModel${i}`).value;
-                    const incentive = document.getElementById(`incentive${i}`).value;
+                    const carModel = document.getElementById(`SCcarModel${i}`).value;
+                    const incentive = document.getElementById(`SCincentive${i}`).value;
                     
                     specialCarPairs[carModel] = incentive;
                     // perModelInputs.push(perModelCarPairs);
                 }
 
     finalObj["QC"] = qcData;
+    finalObj["superCar"] = superCar;
     finalObj["CDI"] = cdiIncentives;
     finalObj["carIncentive"] = carPairs;
     finalObj["ExchangeInputs"] = ExchangePairs;
     finalObj["ComplaintInputs"] = ComplaintInputs;
     finalObj["DiscountInputs"] = DiscountInputs;
     finalObj["MGAIncentive"] = MGAranges;
+    finalObj["MSR"] = MSRinputs;
     finalObj["Extended Warranty"] = EWInputs;
     finalObj["PerModelIncentive"] = perModelCarPairs;
     finalObj["SpecialCarIncentive"] = specialCarPairs;

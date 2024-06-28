@@ -39,19 +39,21 @@
           <label for="numCars" style="color: #1F1A17;">Number of Cars:</label>
           <input type="number" id="numCars" name="numCars">
         </div>
+
         <div style=" display: flex;  justify-content: space-evenly;">
           <label for="autocard" style="color: #1F1A17;">AutoCard:</label>
-          <select id="autocard" name="autocard">
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+          <input type="checkbox" id="autocard" name="autocard" value="yes">
+         
         </div>
+
         <div style=" display: flex;  justify-content: space-evenly;">
           <label for="ew" style="color: #1F1A17;">EW:</label>
-          <select id="ew" name="ew">
+          <!-- <select id="ew" name="ew">
             <option value="yes">Yes</option>
             <option value="no">No</option>
-          </select>
+          </select> -->
+          <input type="checkbox" id="ew" name="ew" value="yes">
+
         </div>
       </div>
 
@@ -109,8 +111,8 @@
 <h2 style="color: #1F1A17;">Special Car Incentive</h2>
 <div id="specialCarPairContainer">
   <div class="specialCarPairContainer">
-      <label for="carModel1">Car Model:</label>
-      <select id="carModel1">
+      <label for="SCcarModel1">Car Model:</label>
+      <select id="SCcarModel1">
           <option value="ALTO">ALTO</option>
           <option value="K-10">K-10</option>
           <option value="S-Presso">S-Presso</option>
@@ -122,8 +124,8 @@
           <option value="Ertiga">Ertiga</option>
           <option value="SWIFT">SWIFT</option>
       </select>
-      <label for="incentive1">Incentive:</label>
-      <input type="number" id="incentive1" placeholder="Enter incentive amount">
+      <label for="SCincentive1">Incentive:</label>
+      <input type="number" id="SCincentive1" placeholder="Enter incentive amount">
   </div>
 </div>
 <button type="button" id="addSpecialCarPairButton">Add Special Car Incentive Pair</button>
@@ -157,6 +159,27 @@
 
 
 
+      <div class="SuperCar-container">
+        <h2 style="color: #1F1A17;">Super Car Incentive</h2>
+        <div id="SuperCar" style="display: flex; padding: 20px; flex-direction: column; margin-bottom: 20px;">
+          <div class="SuperCarSelection-container" style=" display: flex;   justify-content: space-evenly;">
+            <label for="SuperCarSelection" style="color: #1F1A17;">Select Super Car Incentive Criteria Check:</label>
+            <div id="SuperCarSelection">
+              <label style="color: #1F1A17;"><input type="checkbox" name="superCarCheck" value="zerodiscountOnVehicle">Zero Discount on Vehicle</label>
+              <label style="color: #1F1A17;"><input type="checkbox" name="superCarCheck" value="MGASaleGT30K">MGA Sale is Greater Than 30,000</label>
+              <label style="color: #1F1A17;"><input type="checkbox" name="superCarCheck" value="royalPlatinum">EW Sale Of 5 Years (Royal Platinum)</label>
+              <label style="color: #1F1A17;"><input type="checkbox" name="superCarCheck" value="insurance">Insurance</label>
+              <label style="color: #1F1A17;"><input type="checkbox" name="superCarCheck" value="CCP"> CCP (2 Years)</label>
+              <label style="color: #1F1A17;"><input type="checkbox" name="superCarCheck" value="MSR"> MSR</label>
+            </div>
+            <label for="SuperCarIncentive" style="color: #1F1A17;">Enter Super Car Incentive :</label>
+            <input type="number" name="SuperCarIncentive" id="SuperCarIncentive">
+          </div>
+        </div>
+      </div>
+
+
+
 
       <h2 style="color: #1F1A17;">CDI scores</h2>
       <label for="inputType" style="color: #1F1A17;">Select Input Type:</label>
@@ -178,12 +201,6 @@
 
 
       <h2 style="color: #1F1A17;">MGA Incentive</h2>
-      <!-- <label for="rangeType">Range Type:</label>
-      <select id="rangeType" name="rangeType">
-          <option value="lessThan">Less than</option>
-        <option value="greaterThan">Greater than</option>
-        <option value="between">Between</option>
-      </select> -->
       <br>
       <button type="button" id="addMGAInput">Add MGA Input</button>
       <div id="MGAinputsContainer">
@@ -204,6 +221,21 @@
       
       <!-- Container for dynamically added inputs -->
       <div id="EWinputsContainer"></div>
+
+
+
+      <h2 style="color: #1F1A17;">MSR Incentive</h2>
+      <label for="MSRinputType">Select Input Type:</label>
+      <select id="MSRinputType">
+          <option value="greater">Greater Than or Equal To</option>
+          <option value="less">Less Than or Equal To</option>
+          <option value="range">Range</option>
+      </select>
+      
+      <button type="button" id="addMSRInputButton">Add MSR Input</button>
+      
+      <!-- Container for dynamically added inputs -->
+      <div id="MSRinputsContainer"></div>
 
 
       <h2 style="color: #1F1A17;">CCP Incentive</h2>
