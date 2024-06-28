@@ -11,12 +11,12 @@ module.exports =  (qualifiedRM, formData) => {
           for (const incentive of formData.DiscountInputs) {
             if (incentive.max === null) {
                 if (userValue >= incentive.min) {
-                    element["Discount Incentive"] = (userValue*incentive.incentive)/100;
+                    element["Discount Incentive"] = (element["Total Incentive"]*incentive.incentive)/100;
                     break;
                 }
             } else {
                 if (userValue >= incentive.min && userValue < incentive.max) {
-                    element["Discount Incentive"] = (userValue*incentive.incentive)/100;
+                    element["Discount Incentive"] = (element["Total Incentive"]*incentive.incentive)/100;
                     break;
                 }
             }

@@ -30,6 +30,9 @@ const MSSFfunc = require('./functions/MSSFCalculation');
 const DiscountFunc = require('./functions/DiscountCalculation')
 const ExchangeFunc = require('./functions/ExchangeStatusCalculation')
 const ComplaintFunc = require('./functions/ComplaintCalculation');
+const PerModelCarFunc = require('./functions/PerModelCalculation');
+const SpecialCarFunc = require('./functions/SpecialCarCalculation');
+const PerCarFunc = require('./functions/PerCarCalculation');
 
 // Global Variables
 let MGAdata = [];
@@ -39,36 +42,6 @@ let qualifiedRM = [];
 let nonQualifiedRM = [];
 
 
-  const perCarincentiveCalculation = (formData) => {
-
-
-  qualifiedRM.forEach((record) => {
-
-    let soldCar = parseInt(record["Grand Total"]);
-    let perCarIncentive = 0;
-
-    // Find the appropriate incentive based on the exact number of cars sold
-    formData.carIncentive.forEach((incentive) => {
-
-      if (soldCar == parseInt(incentive.cars)) {
-        perCarIncentive = parseInt(incentive.incentive);
-        // console.log("perCarIncentive ::::::::::::::::::",perCarIncentive);
-      }
-    });
-
-
-    const lastIncentive = formData.carIncentive[formData.carIncentive.length - 1].incentive;
-      if (soldCar > parseInt(formData.carIncentive[formData.carIncentive.length - 1].cars)) {
-          perCarIncentive = lastIncentive;
-      }
-
-    // Add the incentive to the record
-    record["Per Car Incentive"] = perCarIncentive;
-    record["Total Incentive"] = soldCar * perCarIncentive;
-  });
-
-  // console.log("qualifiedRM with incentives: ", qualifiedRM);
-}
 
 const checkQualifingCondition = (formData) => {
   console.log("checkQualifingCondition");
@@ -100,6 +73,7 @@ const checkQualifingCondition = (formData) => {
     }
 
     const DSE_NoOfSoldCarExcelDataArr = Object.values(item)[0]; 
+
     obj = {
       "DSE ID": DSE_NoOfSoldCarExcelDataArr[0]['DSE ID'],
       "DSE Name": DSE_NoOfSoldCarExcelDataArr[0]['DSE Name'],
@@ -113,7 +87,7 @@ const checkQualifingCondition = (formData) => {
 
      Discount = Discount + parseInt(sold["FINAL DISCOUNT"]); 
 
-     
+     carObj[sold["Model Name"]]++;
 
      if(parseInt(sold["CCP PLUS"]) >0){
       CCPcheck++;
@@ -135,7 +109,7 @@ const checkQualifingCondition = (formData) => {
      
  if (formData.QC.focusModel.includes(sold["Model Name"])) {
         numberCheck++;
-        carObj[sold["Model Name"]]++;
+        // carObj[sold["Model Name"]]++;
       }
       if (formData.QC.autoCard == "yes") {
         if (sold["Autocard"] == "YES") {
@@ -171,7 +145,7 @@ const checkQualifingCondition = (formData) => {
         // console.log("sdfghgfcvhjkjhv  :  ", obj);
         obj = {
           ...obj,
-          // ...carObj,
+          ...carObj,
           "Focus Model Qualification": "YES",
           "Discount": Discount,
           "Exchange Status" : ExchangeStatusCheck,
@@ -205,11 +179,16 @@ const checkQualifingCondition = (formData) => {
 
 }
 
+
+
+
 ipcMain.on('form-submit', (event, formData) => {
  
   console.log("Form Data Input", formData);
   checkQualifingCondition(formData);
-  perCarincentiveCalculation(formData);
+  qualifiedRM = PerCarFunc(qualifiedRM,formData);
+  qualifiedRM = SpecialCarFunc(qualifiedRM,formData);
+  qualifiedRM = PerModelCarFunc(qualifiedRM,formData);
   qualifiedRM = CDIfunc(qualifiedRM,CDIdata,formData);
   qualifiedRM = EWfunc(qualifiedRM, formData);
   qualifiedRM = CCPfunc(qualifiedRM,formData);
@@ -217,9 +196,6 @@ ipcMain.on('form-submit', (event, formData) => {
   qualifiedRM = DiscountFunc(qualifiedRM,formData);
   qualifiedRM = ExchangeFunc(qualifiedRM,formData);
   qualifiedRM = ComplaintFunc(qualifiedRM,formData);
-
-
-
   qualifiedRM = MGAfunc(qualifiedRM, MGAdata, formData);
 
    console.log(qualifiedRM);
@@ -228,6 +204,10 @@ ipcMain.on('form-submit', (event, formData) => {
 
   
 });
+
+
+
+
 
 ipcMain.on('file-selected-salesExcel', (event, path) => {
 
@@ -274,6 +254,8 @@ ipcMain.on('file-selected-salesExcel', (event, path) => {
 });
 
 
+
+
 ipcMain.on('file-selected-CDIScore', (event, path) => {
 
   const workbook = XLSX.readFile(path);
@@ -283,7 +265,7 @@ ipcMain.on('file-selected-CDIScore', (event, path) => {
 
 CDIdata = CDIsheetData;
 
-  console.log("Object inside array CDI Score", CDIdata);
+  // console.log("Object inside array CDI Score", CDIdata);
 });
 
 

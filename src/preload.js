@@ -9,8 +9,10 @@ let CCPInputs = [];
 let MSSFInputs = [];
 let DiscountInputs = [];
 let ComplaintInputs = [];
-let perModelInputs = [];
+
 let pairCount = 1;
+let specialCarPairCount = 1;
+
 
 
 
@@ -455,6 +457,57 @@ document.addEventListener("DOMContentLoaded", function () {
 
             perModelPairContainer.insertAdjacentHTML('beforeend', newPairHTML);
         });
+
+
+    
+        const addSpecialCarPairButton = document.getElementById('addSpecialCarPairButton')
+        addSpecialCarPairButton.addEventListener('click', function() {
+            pairCount++;
+            const specialCarPairContainer = document.getElementById('specialCarPairContainer');
+
+            const newPairHTML = `
+                <div class="specialCarPairContainer">
+                    <label for="carModel${specialCarPairCount}">Car Model:</label>
+                    <select id="carModel${specialCarPairCount}">
+                        <option value="ALTO">ALTO</option>
+                        <option value="K-10">K-10</option>
+                        <option value="S-Presso">S-Presso</option>
+                        <option value="CELERIO">CELERIO</option>
+                        <option value="WagonR">WagonR</option>
+                        <option value="BREZZA">BREZZA</option>
+                        <option value="DZIRE">DZIRE</option>
+                        <option value="EECO">EECO</option>
+                        <option value="Ertiga">Ertiga</option>
+                        <option value="SWIFT">SWIFT</option>
+                    </select>
+                    <label for="incentive${specialCarPairCount}">Incentive:</label>
+                    <input type="number" id="incentive${specialCarPairCount}" placeholder="Enter incentive amount">
+                </div>
+            `;
+
+            specialCarPairContainer.insertAdjacentHTML('beforeend', newPairHTML);
+        });
+    
+
+
+
+
+        document.getElementById('sectionSelect').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const perCarIncentiveSection = document.getElementById('perCarIncentiveSection');
+            const perModelIncentiveSection = document.getElementById('perModelIncentiveSection');
+    
+            if (selectedValue === 'perCarIncentive') {
+                perCarIncentiveSection.classList.remove('hidden');
+                perModelIncentiveSection.classList.add('hidden');
+            } else if (selectedValue === 'perModelIncentive') {
+                perCarIncentiveSection.classList.add('hidden');
+                perModelIncentiveSection.classList.remove('hidden');
+            }
+        });
+    
+        // Initialize visibility based on the initial selection
+        document.getElementById('sectionSelect').dispatchEvent(new Event('change'));     
    
 
 
@@ -666,19 +719,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     MGAranges.push(incentive);
                 });            
 
-               
+                let perModelCarPairs = {};
                 for (let i = 1; i <= pairCount; i++) {
-
-                    const perModelCarPairs = {};
 
                     const carModel = document.getElementById(`carModel${i}`).value;
                     const incentive = document.getElementById(`incentive${i}`).value;
                     
-
                     perModelCarPairs[carModel] = incentive;
-                    perModelInputs.push(perModelCarPairs);
+                    // perModelInputs.push(perModelCarPairs);
                 }
+ 
 
+                let specialCarPairs = {};
+
+                for (let i = 1; i <= specialCarPairCount; i++) {
+
+                    const carModel = document.getElementById(`carModel${i}`).value;
+                    const incentive = document.getElementById(`incentive${i}`).value;
+                    
+                    specialCarPairs[carModel] = incentive;
+                    // perModelInputs.push(perModelCarPairs);
+                }
 
     finalObj["QC"] = qcData;
     finalObj["CDI"] = cdiIncentives;
@@ -688,7 +749,8 @@ document.addEventListener("DOMContentLoaded", function () {
     finalObj["DiscountInputs"] = DiscountInputs;
     finalObj["MGAIncentive"] = MGAranges;
     finalObj["Extended Warranty"] = EWInputs;
-    finalObj["PerModelIncentive"] = perModelInputs;
+    finalObj["PerModelIncentive"] = perModelCarPairs;
+    finalObj["SpecialCarIncentive"] = specialCarPairs;
     finalObj["CCP"] = CCPInputs;
     finalObj["MSSF"] = MSSFInputs;
     console.log('FinalObj', finalObj);
