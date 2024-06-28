@@ -246,7 +246,7 @@ ipcMain.on('file-selected-salesExcel', (event, path) => {
   })
 
 
-  console.log("MGA", MGAdata);
+  // console.log("MGA", MGAdata);
 
 
 
@@ -273,7 +273,7 @@ ipcMain.on('file-selected-salesExcel', (event, path) => {
       salesExcelDataSheet.push(obj);
     }
   }
-  console.log("Object inside array Sales excel", JSON.stringify(salesExcelDataSheet));
+  // console.log("Object inside array Sales excel", JSON.stringify(salesExcelDataSheet));
 });
 
 

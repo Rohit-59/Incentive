@@ -757,6 +757,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 let specialCarPairs = {};
 
+                if(document.getElementById("SCincentive1").value != ""){
+
                 for (let i = 1; i <= specialCarPairCount; i++) {
 
                     const carModel = document.getElementById(`SCcarModel${i}`).value;
@@ -765,6 +767,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     specialCarPairs[carModel] = incentive;
                     // perModelInputs.push(perModelCarPairs);
                 }
+            }
 
     finalObj["QC"] = qcData;
     finalObj["superCar"] = superCar;
